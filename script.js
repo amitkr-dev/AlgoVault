@@ -234,12 +234,15 @@ function renderPatternView(pattern) {
     document.getElementById('lastRevised').textContent = pattern.lastRevised ? `Last Rev: ${formatDate(pattern.lastRevised)}` : '';
 
     const editor = document.getElementById('notesEditor');
-    if (editor.value !== pattern.notes) editor.value = pattern.notes;
+
+    if (editor.innerHTML !== pattern.notes) {
+        editor.innerHTML = pattern.notes || "";
+    }
 }
 
 function renderRevisionMode(pattern) {
     document.getElementById('revPatternName').textContent = pattern.name;
-    document.getElementById('revNotesContent').textContent = pattern.notes;
+    document.getElementById('revNotesContent').innerHTML = pattern.notes || '';
 }
 
 function renderDashboard() {
@@ -574,13 +577,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelector('.nav-item[data-action="dashboard"]').addEventListener('click', selectDashboard);
 
+    document.getElementById('notesEditor').addEventListener('paste', (e) => {
+        e.preventDefault();
+    
+        const html =
+            e.clipboardData.getData('text/html') ||
+            e.clipboardData.getData('text/plain');
+    
+        document.execCommand('insertHTML', false, html);
+    });
+    document.getElementById('notesEditor').addEventListener('click', (e) => {
+        const link = e.target.closest('a');
+    
+        if (link) {
+            e.preventDefault();
+            window.open(link.href, '_blank');
+        }
+    });
     // Pattern View handlers
     document.getElementById('patternNameInput').addEventListener('input', (e) => { if (state.activePatternId) handleNameInput(state.activePatternId, e.target.value); });
     document.getElementById('timeComplexity').addEventListener('input', (e) => { if (state.activePatternId) handleComplexityInput(state.activePatternId, 'timeComplexity', e.target.value); });
     document.getElementById('spaceComplexity').addEventListener('input', (e) => { if (state.activePatternId) handleComplexityInput(state.activePatternId, 'spaceComplexity', e.target.value); });
     
     // Auto-saving textareas
-    document.getElementById('notesEditor').addEventListener('input', (e) => { if (state.activePatternId) handleAutoSave(state.activePatternId, 'notes', e.target.value, 'saveStatus'); });
+    document.getElementById('notesEditor').addEventListener('input', (e) => {
+        if (state.activePatternId) {
+            handleAutoSave(
+                state.activePatternId,
+                'notes',
+                e.target.innerHTML,
+                'saveStatus'
+            );
+        }
+    });
     document.getElementById('codeTemplate').addEventListener('input', (e) => { if (state.activePatternId) handleAutoSave(state.activePatternId, 'codeTemplate', e.target.value, 'saveStatus'); });
     document.getElementById('mistakesTextarea').addEventListener('input', (e) => { if (state.activePatternId) handleAutoSave(state.activePatternId, 'mistakesLog', e.target.value, 'saveStatus'); });
     
