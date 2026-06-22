@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Knowledge Base</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <button id="sidebarToggle" class="icon-btn" aria-label="Toggle Sidebar">☰</button>
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                <span>DSA Knowledge Base</span>
+            </div>
+        </div>
+        <div class="nav-center">
+            <div class="search-wrapper">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="globalSearch" placeholder="Search topics, patterns, notes...">
+                <div id="searchResults" class="search-results hidden"></div>
+            </div>
+        </div>
+        <div class="nav-right">
+            <button id="addTopicBtn" class="btn btn-ghost">+ Topic</button>
+            <button id="addPatternBtn" class="btn btn-ghost">+ Pattern</button>
+            <button id="favFilterBtn" class="btn btn-icon" title="Favorites Filter">★</button>
+            <button id="revFilterBtn" class="btn btn-icon" title="Revision Filter">⟳</button>
+            <button id="darkModeToggle" class="btn btn-icon" title="Dark Mode">🌙</button>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-content">
+                <div class="nav-item" data-action="dashboard">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    Dashboard
+                </div>
+                <div class="sidebar-header">
+                    <span>My Topics</span>
+                </div>
+                <ul id="topicsList" class="topics-list"></ul>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <main id="content" class="content">
+            <!-- Dashboard View -->
+            <div id="dashboardView" class="dashboard-view">
+                <h1 class="view-title">Dashboard</h1>
+                <div class="stats-grid" id="statsGrid"></div>
+                <div class="recent-activity">
+                    <h3>Recent Activity</h3>
+                    <div id="recentActivityList" class="recent-list"></div>
+                </div>
+            </div>
+
+            <!-- Pattern View -->
+            <div id="patternView" class="pattern-view hidden">
+                <header class="pattern-header">
+                    <div class="header-top">
+                        <input type="text" id="patternNameInput" class="pattern-name-input" placeholder="Pattern Name">
+                        <div class="pattern-actions">
+                            <button id="favBtn" class="btn btn-icon btn-fav" title="Favorite">☆</button>
+                            <button id="exportPatternBtn" class="btn btn-ghost" title="Export Pattern">Export</button>
+                        </div>
+                    </div>
+                    <div class="pattern-meta">
+                        <div class="complexity-container">
+                            <div class="complexity-item">
+                                <span class="complexity-label">Time:</span>
+                                <input type="text" id="timeComplexity" class="complexity-input" placeholder="O(n)">
+                            </div>
+                            <div class="complexity-item">
+                                <span class="complexity-label">Space:</span>
+                                <input type="text" id="spaceComplexity" class="complexity-input" placeholder="O(1)">
+                            </div>
+                        </div>
+                        <div class="tags-container" id="tagsContainer">
+                            <div class="tags-list" id="tagsList"></div>
+                            <input type="text" id="tagInput" placeholder="+ Tag" class="tag-input">
+                        </div>
+                        <div class="meta-info">
+                            <span id="updatedAt"></span>
+                            <span id="revisedCount"></span>
+                            <span id="lastRevised"></span>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="pattern-body">
+                    <div class="editor-main">
+                        <div class="editor-section">
+                            <div class="save-status" id="saveStatus">Saved ✓</div>
+                            <textarea id="notesEditor" class="notes-editor" placeholder="Start writing your notes, theory, explanations..."></textarea>
+                        </div>
+                        
+                        <div class="editor-footer">
+                            <button id="reviseBtn" class="btn btn-primary">Mark as Revised</button>
+                        </div>
+                    </div>
+
+                    <aside class="sidebar-right">
+                        <div class="card glass">
+                            <div class="card-header">
+                                <h3>Code Template</h3>
+                            </div>
+                            <textarea id="codeTemplate" class="code-editor" placeholder="Write your boilerplate code here..."></textarea>
+                        </div>
+
+                        <div class="card glass">
+                            <div class="card-header">
+                                <h3>Mistakes</h3>
+                            </div>
+                            <textarea id="mistakesTextarea" class="mistakes-editor" placeholder="Log your mistakes, edge cases, and gotchas here..."></textarea>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+
+            <!-- Revision View -->
+            <div id="revisionView" class="pattern-view hidden">
+                <header class="pattern-header">
+                    <div class="header-top">
+                        <h1 id="revPatternName" class="pattern-name-input pattern-name-display">Pattern Name</h1>
+                        <div class="pattern-actions">
+                            <button id="exitRevModeBtn" class="btn btn-primary">Exit Revision</button>
+                        </div>
+                    </div>
+                </header>
+                <div class="pattern-body">
+                    <div class="editor-section">
+                        <div id="revNotesContent" class="notes-editor notes-display"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state hidden">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                <h2>Select a Pattern</h2>
+                <p>Choose a pattern from the sidebar or create a new one to start taking notes.</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
