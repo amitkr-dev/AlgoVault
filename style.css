@@ -252,3 +252,32 @@ mark { background-color: var(--tag-bg); color: var(--tag-text); padding: 0 2px; 
 /* Drag and Drop styles */
 .drag-over { border: 2px dashed var(--accent-color); background-color: rgba(99, 102, 241, 0.05); }
 .dragging { opacity: 0.5; }
+
+.rich-editor {
+    min-height: 60vh;
+    outline: none;
+    overflow-y: auto;
+}
+
+.rich-editor:empty::before {
+    content: attr(data-placeholder);
+    color: var(--text-secondary);
+    pointer-events: none;
+}
+
+.rich-editor a {
+    color: #6366f1;
+    text-decoration: underline;
+}
+
+.rich-editor ul,
+.rich-editor ol {
+    padding-left: 24px;
+}
+
+.rich-editor code {
+    background: #222;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
